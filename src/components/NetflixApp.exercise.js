@@ -6,6 +6,7 @@ import axios from 'axios'
 import './Netflix.css'
 import {getRandomType, getRandomId} from '../utils/helper'
 import {API_URL, imagePath, apiKey, lang, imagePathOriginal} from '../config'
+import {clientApi} from 'utils/clientApi'
 
 // 🐶 passe en prop 'movie' qui contiendra les informations d'un film
 const NetflixHeader = ({movie, type}) => {
@@ -104,8 +105,9 @@ const NetflixApp = () => {
   useEffect(() => {
     console.log('useEffect called')
 
-    axios
-      .get(`${API_URL}/${type}/${id}?api_key=${apiKey}&language=${lang}`)
+    clientApi(`/${type}/${id}`)
+      // axios
+      //   .get(`${API_URL}/${type}/${id}?api_key=${apiKey}&language=${lang}`)
       .then(response => {
         console.log(response)
         setHeaderMovie(response)
