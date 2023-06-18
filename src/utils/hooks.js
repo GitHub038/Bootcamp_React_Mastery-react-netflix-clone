@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'fetching':
@@ -23,9 +22,14 @@ function useFetchData() {
   const {data, error, status} = state
 
   const execute = React.useCallback(promise => {
+    console.log(promise)
     dispatch({type: 'fetching'})
     promise
-      .then(marvel => dispatch({type: 'done', payload: marvel}))
+      .then(response => {
+        console.log('sao')
+        console.log(response)
+        dispatch({type: 'done', payload: response})
+      })
       .catch(error => dispatch({type: 'fail', error}))
   }, [])
 
