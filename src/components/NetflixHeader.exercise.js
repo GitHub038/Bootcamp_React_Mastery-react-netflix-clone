@@ -1,5 +1,5 @@
 import React from 'react'
-// 🐶 importe le composant 'HeaderSkeleton'
+// 🐶 importe le composant 'HeaderSkeleton '
 import {imagePathOriginal, TYPE_MOVIE} from '../config'
 import {HeaderSkeleton} from './skeletons/HeaderSkeleton.exercise'
 
