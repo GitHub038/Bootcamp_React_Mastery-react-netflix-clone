@@ -1,3 +1,3 @@
 //export * from './HeaderSkeleton.final'
 
-export * from './HeaderSkeleton.exercise'
+export * from './HeaderSkeleton.final'

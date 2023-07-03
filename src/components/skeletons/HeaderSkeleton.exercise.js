@@ -1,3 +1,4 @@
+import {Skeleton} from '@mui/material'
 import * as React from 'react'
 // 🐶 importe le composant Skeleton de MUI
 // 📑 Le lien vers la documentation de Skeleton https://mui.com/components/skeleton/
