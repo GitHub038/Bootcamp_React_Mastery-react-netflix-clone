@@ -26,12 +26,12 @@ const useStyles = makeStyles(theme => ({
 const NetflixSeries = () => {
   const classes = useStyles()
   const {data: headerMovie, error, status, execute} = useFetchData()
-  const [type] = React.useState(getRandomType())
-  const defaultMovieId = getRandomId(type)
+  // const [type] = React.useState(getRandomType())
+  const defaultMovieId = getRandomId(TYPE_TV)
 
   React.useEffect(() => {
-    execute(clientApi(`${type}/${defaultMovieId}`))
-  }, [execute, defaultMovieId, type])
+    execute(clientApi(`${TYPE_TV}/${defaultMovieId}`))
+  }, [execute, defaultMovieId])
 
   if (status === 'error') {
     // sera catché par ErrorBoundary
@@ -40,7 +40,7 @@ const NetflixSeries = () => {
   return (
     <div>
       <NetflixAppBar />
-      <NetflixHeader movie={headerMovie?.data} type={type} />
+      <NetflixHeader movie={headerMovie?.data} type={TYPE_TV} />
       {/* 
         🐶 utilise les bons 'props' pour respacter les spécifications de   
         👨‍✈️ Hugo le chef de projet : "Séries tendances Netflix "
@@ -49,40 +49,41 @@ const NetflixSeries = () => {
       <NetflixRow
         wideImage={true}
         watermark={true}
-        type={TYPE_MOVIE}
+        type={TYPE_TV}
         filter="trending"
-        title="Films Netflix"
+        title="Séries tendances Netflix"
       />
+
+      <NetflixRow
+        type={TYPE_TV}
+        filter="toprated"
+        title="Séries les mieux notés"
+        watermark={true}
+        wideImage={true}
+      />
+
       <NetflixRow
         wideImage={false}
-        watermark={true}
+        watermark={false}
         type={TYPE_TV}
-        filter="trending"
-        title="Série Netflix"
+        filter="populaire"
+        title="Les série populiares"
       />
 
       <NetflixRow
-        type={TYPE_MOVIE}
-        filter="toprated"
-        title="Les mieux notés"
-        watermark={true}
+        type={TYPE_TV}
+        filter="genre"
+        param="99"
+        title="Documentaires"
+        watermark={false}
         wideImage={true}
       />
 
       <NetflixRow
         type={TYPE_TV}
         filter="genre"
-        param="10759"
-        title="Action & aventure"
-        watermark={true}
-        wideImage={true}
-      />
-
-      <NetflixRow
-        type={TYPE_MOVIE}
-        filter="genre"
-        param="53"
-        title="Les meilleurs Thriller"
+        param="80"
+        title="Les séries criminelles"
         watermark={false}
         wideImage={false}
       />

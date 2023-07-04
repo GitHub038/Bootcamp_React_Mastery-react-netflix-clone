@@ -48,10 +48,10 @@ const NetflixNews = () => {
       */}
       <NetflixRow
         wideImage={true}
-        watermark={true}
+        watermark={false}
         type={TYPE_MOVIE}
-        filter="trending"
-        title="Films Netflix"
+        filter="latest"
+        title="A venir"
       />
       {/* 
         🐶 utilise les bons 'props' pour respacter les spécifications de   
@@ -59,36 +59,10 @@ const NetflixNews = () => {
       */}
       <NetflixRow
         wideImage={false}
-        watermark={true}
-        type={TYPE_TV}
-        filter="trending"
-        title="Série Netflix"
-      />
-
-      <NetflixRow
-        type={TYPE_MOVIE}
-        filter="toprated"
-        title="Les mieux notés"
-        watermark={true}
-        wideImage={true}
-      />
-
-      <NetflixRow
-        type={TYPE_TV}
-        filter="genre"
-        param="10759"
-        title="Action & aventure"
-        watermark={true}
-        wideImage={true}
-      />
-
-      <NetflixRow
-        type={TYPE_MOVIE}
-        filter="genre"
-        param="53"
-        title="Les meilleurs Thriller"
         watermark={false}
-        wideImage={false}
+        type={TYPE_MOVIE}
+        filter="latest"
+        title="Nouveauté "
       />
 
       {status === 'error' ? (

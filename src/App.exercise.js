@@ -6,6 +6,12 @@ import ErrorFallback from './components/ErrorFallback'
 // 🐶 importe le composant 'Error404' depuis '/components/Error404'
 // 🐶 importe le composant 'NetflixMovies', 'NetflixSeries','NetflixNews', 'NetflixById'
 // 🐶 importe -> import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import Error404 from 'components/Error404'
+import {NetflixMovies} from 'components/NetflixMovies.exercise'
+import {NetflixSeries} from 'components/NetflixSeries.exercise'
+import {NetflixNews} from 'components/NetflixNews.exercise'
+import {NetflixById} from 'components/NetflixById.exercise'
+import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
 
 const theme = createTheme({
   palette: {
@@ -22,9 +28,10 @@ const theme = createTheme({
 function App() {
   return (
     // 🐶 wrappe toute l'application avec <Router>
-    <ThemeProvider theme={theme}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        {/* 
+    <Router>
+      <ThemeProvider theme={theme}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          {/* 
           🐶 utilise <Routes> et  </Routes> pour determiner les routes
           nous voulons les routes avec les configurations suivantes :
           
@@ -37,9 +44,18 @@ function App() {
           7. path '/*' -> <Error404 />
        
         */}
-        <NetflixApp />
-      </ErrorBoundary>
-    </ThemeProvider>
+          <Routes>
+            <Route path="/" element={<NetflixApp />} />
+            <Route path="/tv/:tvId" element={<NetflixById />} />
+            <Route path="/movie/:movieId" element={<NetflixById />} />
+            <Route path="/series" element={<NetflixSeries />} />
+            <Route path="/movies" element={<NetflixMovies />} />
+            <Route path="/news" element={<NetflixNews />} />
+            <Route path="/*" element={<Error404 />} />
+          </Routes>
+        </ErrorBoundary>
+      </ThemeProvider>
+    </Router>
   )
 }
 

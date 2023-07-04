@@ -4,6 +4,7 @@ import {useFetchData} from '../utils/hooks'
 import {clientApi} from '../utils/clientApi'
 import {Alert, AlertTitle} from '@mui/material'
 import {RowSkeleton} from './skeletons/RowSkeleton'
+import {Link} from 'react-router-dom'
 const NetflixRow = ({
   title = '',
   wideImage = true,
@@ -69,12 +70,14 @@ const NetflixRow = ({
       <div className="row__posters">
         {data.data.results.map(movie => {
           return (
-            <div
-              key={movie.id}
-              className={`row__poster row__posterLarge ${watermarkClass}`}
-            >
-              <img src={buildImagePath(movie)} alt={movie.name} />
-            </div>
+            <Link to={`/${type}/${movie.id}`}>
+              <div
+                key={movie.id}
+                className={`row__poster row__posterLarge ${watermarkClass}`}
+              >
+                <img src={buildImagePath(movie)} alt={movie.name} />
+              </div>
+            </Link>
           )
         })}
       </div>

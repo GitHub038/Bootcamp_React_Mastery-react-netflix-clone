@@ -57,10 +57,10 @@ const NetflixMovies = () => {
       */}
       <NetflixRow
         wideImage={false}
-        watermark={true}
-        type={TYPE_TV}
-        filter="trending"
-        title="Série Netflix"
+        watermark={false}
+        type={TYPE_MOVIE}
+        filter="toprated"
+        title="Les mieux notés"
       />
       {/* 
         🐶 Utilise les bons 'props' pour respacter les spécifications de   
@@ -68,9 +68,9 @@ const NetflixMovies = () => {
       */}
       <NetflixRow
         type={TYPE_MOVIE}
-        filter="toprated"
-        title="Les mieux notés"
-        watermark={true}
+        filter="populaire"
+        title="Les films populaires"
+        watermark={false}
         wideImage={true}
       />
       {/* 
@@ -80,9 +80,9 @@ const NetflixMovies = () => {
       <NetflixRow
         type={TYPE_TV}
         filter="genre"
-        param="10759"
-        title="Action & aventure"
-        watermark={true}
+        param="14"
+        title="Les films fantastiques"
+        watermark={false}
         wideImage={true}
       />
       {/* 
@@ -92,8 +92,8 @@ const NetflixMovies = () => {
       <NetflixRow
         type={TYPE_MOVIE}
         filter="genre"
-        param="53"
-        title="Les meilleurs Thriller"
+        param="878"
+        title="Les films de sciences fictions"
         watermark={false}
         wideImage={false}
       />

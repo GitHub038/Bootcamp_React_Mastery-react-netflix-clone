@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import {useFetchData} from '../utils/hooks'
 import {TYPE_MOVIE, TYPE_TV} from '../config'
 import './Netflix.css'
+import {useLocation, useParams} from 'react-router-dom'
 
 // 🐶 importe les hooks 'useParams' et 'useLocation' de "react-router-dom"
 
@@ -30,19 +31,28 @@ const NetflixById = () => {
   const classes = useStyles()
   const {data: headerMovie, error, status, execute} = useFetchData()
   // 🐶 utilise le hook 'useParams' pour récuperer les valeurs de 'tvId' et 'movieId'
+  const {tvId, movieId} = useParams()
   // 🐶 utilise le hook 'useLocation' pour récuperer la valeur de 'pathname'
   // cela nous permetra de savoir si l'url est /tv/:tvId ou /movie/:movieId
   // donc de pouvoir determiner le 'type' (TYPE_TV ou TYPE_MOVIE)
+  const location = useLocation()
 
   // ⛏️ supprime 'getRandomType()' et met la valeur de type determinée plus haut.
-  const [type] = React.useState(getRandomType())
+  // const [type] = React.useState(getRandomType())
+  const [type, setType] = React.useState(
+    location.pathname.includes('tv') ? TYPE_TV : TYPE_MOVIE,
+  )
+  // const type = location.pathname.includes('tv')
+  //   ? TYPE_TV
+  //   : TYPE_MOVIE
 
   // 🐶 determine l'id en fonction du type (soit 'tvId' soit 'movieId' )
-  const defaultMovieId = getRandomId(type)
+  const [id, setId] = React.useState(type === TYPE_MOVIE ? movieId : tvId)
+  //  const id = type === TYPE_MOVIE ? movieId : tvId
 
   React.useEffect(() => {
-    execute(clientApi(`${type}/${defaultMovieId}`))
-  }, [execute, defaultMovieId, type])
+    execute(clientApi(`${type}/${id}`))
+  }, [execute, id, type])
 
   // 🐶 Utilise à nouveau 'useEffect' pour mettre à jour les 3 states suivants:
   // - 'type'
@@ -51,7 +61,17 @@ const NetflixById = () => {
   // ce qui va ensuite déclancher un nouvelle appel API
   //
   // n'oublie pas les dépendances
+  React.useEffect(() => {
+    const type = location.pathname.includes('tv') ? TYPE_TV : TYPE_MOVIE
+    setType(type)
+    setId(type === TYPE_MOVIE ? movieId : tvId)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+  }, [location.pathname, movieId, tvId])
 
+  React.useEffect(() => {})
   if (status === 'error') {
     // sera catché par ErrorBoundary
     throw new Error(error.message)
