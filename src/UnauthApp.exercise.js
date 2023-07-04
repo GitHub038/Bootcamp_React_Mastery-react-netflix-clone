@@ -1,11 +1,13 @@
 import * as React from 'react'
 // 🐶 importe le composant 'LoginRegister' qui est dans ./components/LoginRegister
+import LoginRegister from './components/LoginRegister'
 
 // 🐶 passe les props 'login' et 'register' qui sont utilise à <Login>
-function UnauthApp() {
+function UnauthApp({login, register}) {
   // 👨‍✈️ hugo souhaite une image de fond avec des films Netflix pour page <LoginRegister />
   // utilise celle ci :
   // 🤖 const imageUrl = '/images/posters.jpg'
+  const imageUrl = '/images/posters.jpg'
   return (
     // 🐶 applique ce style pour avoir l'image de fond
     // backgroundImage: `url('${imageUrl}')`,
