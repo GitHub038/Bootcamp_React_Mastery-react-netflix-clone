@@ -5,7 +5,8 @@ import {clientApi} from '../utils/clientApi'
 import {Alert, AlertTitle} from '@mui/material'
 // 🐶 importe le composant 'RowSkeleton'
 // ⛏️ supprime 'CircularProgress'
-import CircularProgress from '@mui/material/CircularProgress'
+//import CircularProgress from '@mui/material/CircularProgress'
+import {RowSkeleton} from './skeletons/RowSkeleton.exercise'
 
 const NetflixRow = ({
   title = '',
@@ -58,12 +59,13 @@ const NetflixRow = ({
   if (status === 'fetching' || status === 'idle') {
     return (
       // ⛏️ supprime cette 'div' et utilise le <HeaderSkeleton> avec les bons 'props'
-      <div className="row">
-        <h2>{title}</h2>
-        <div className="row__posters">
-          <CircularProgress />
-        </div>
-      </div>
+      // <div className="row">
+      //   <h2>{title}</h2>
+      //   <div className="row__posters">
+      //     <CircularProgress />
+      //   </div>
+      // </div>
+      <RowSkeleton title={title} wideImage={wideImage} />
     )
   }
   if (status === 'error') {

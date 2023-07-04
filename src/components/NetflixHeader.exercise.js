@@ -17,7 +17,7 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   if (!movie) {
     // 🐶 retoune <HeaderSkeleton />
     // return <></>
-    return <HeaderSkeleton />
+    return <HeaderSkeleton banner={banner} />
   }
   return (
     <header style={banner}>
