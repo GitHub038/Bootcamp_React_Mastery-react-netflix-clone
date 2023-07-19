@@ -12,6 +12,13 @@ import {HeaderSkeleton} from './skeletons/HeaderSkeleton'
 import {useFetchData} from 'utils/hooks'
 import {clientNetFlix} from 'utils/clientApi'
 import * as authNetflix from '../utils/authNetflixProvider'
+import DeleteIcon from '@mui/icons-material/Delete'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert from '@mui/material/Alert'
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+})
 
 // 👨‍✈️ Trois choses à gérer dans ce composant :
 //
@@ -24,7 +31,10 @@ import * as authNetflix from '../utils/authNetflixProvider'
 //  - faire un appel API DELETE /bookmark/tv ou /bookmark/movie
 const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   // 🐶 utilise le hook 'useFetchData' pour avoir : data, execute
-  const {data, execute} = useFetchData()
+  const {data, error, status, execute} = useFetchData()
+
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false)
+  const [callBookmark, setCallBookmark] = React.useState(false)
 
   const title = type === TYPE_MOVIE ? movie?.title : movie?.name
   const imageUrl = `${imagePathOriginal}${movie?.backdrop_path}`
@@ -52,6 +62,10 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
     getTokenExecute()
   }, [execute])
 
+  React.useEffect(() => {
+    setSnackbarOpen(true)
+  }, [status])
+
   // 🐶 créé un boolean 'isInList' permetant de s'avoir si 'movie.id' est deja
   // dans la liste des favoris récuperer par l'api '/bookmark'
   // rapel du format des données reçues
@@ -76,6 +90,7 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
         method: 'POST',
       }),
     )
+    setCallBookmark(true)
   }
 
   // 🐶 créé une fonction async 'handleDeleteToListClick'
@@ -89,6 +104,7 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
         method: 'DELETE',
       }),
     )
+    setCallBookmark(true)
   }
 
   if (!movie) {
@@ -109,6 +125,11 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
               className="banner__button banner__buttonInfo"
               onClick={handleDeleteToListClick}
             >
+              <DeleteIcon
+                color="secondary"
+                style={{marginRight: '5px'}}
+                fontSize={'small'}
+              />
               Supprimer de ma liste
             </button>
           ) : (
@@ -123,6 +144,28 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
         <h1 className="synopsis">{movie?.overview ?? '...'}</h1>
       </div>
       <div className="banner--fadeBottom"></div>
+      {callBookmark && status === 'done' ? (
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+        >
+          <Alert severity="success" sx={{width: '100%'}}>
+            Liste modifiée avec succès
+          </Alert>
+        </Snackbar>
+      ) : null}
+      {callBookmark && status === 'error' ? (
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+        >
+          <Alert severity="error" sx={{width: '100%'}}>
+            Problème lors de l'ajout : {error.message}
+          </Alert>
+        </Snackbar>
+      ) : null}
     </header>
   )
 }
