@@ -5,11 +5,12 @@ import {NetFlixFooter} from './NetFlixFooter'
 import {NetflixHeader} from './NetflixHeader'
 import {clientApi} from '../utils/clientApi'
 import {makeStyles} from '@mui/styles'
-import {Alert, AlertTitle} from '@mui/material'
-import CircularProgress from '@mui/material/CircularProgress'
+// import {Alert, AlertTitle} from '@mui/material'
+// import CircularProgress from '@mui/material/CircularProgress'
 // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
-import {useFetchData} from '../utils/hooks'
+// import {useFetchData} from '../utils/hooks'
 // 🐶 importe {useQuery}
+import {useQuery} from 'react-query'
 import {TYPE_MOVIE, TYPE_TV} from '../config'
 import {useParams, useLocation} from 'react-router-dom'
 import './Netflix.css'
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 const NetflixById = ({logout}) => {
   const classes = useStyles()
   // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
-  const {data: headerMovie, error, status, execute} = useFetchData()
+  // const {data: headerMovie, error, status, execute} = useFetchData()
   let {tvId, movieId} = useParams()
   const location = useLocation()
   const [type, setType] = React.useState(
@@ -37,9 +38,9 @@ const NetflixById = ({logout}) => {
   const [id, setId] = React.useState(type === TYPE_TV ? tvId : movieId)
 
   // ⛏️ supprime le hook 'useEffect' car on utilisera 'useQuery'
-  React.useEffect(() => {
-    execute(clientApi(`${type}/${id}`))
-  }, [execute, id, type])
+  // React.useEffect(() => {
+  //   execute(clientApi(`${type}/${id}`))
+  // }, [execute, id, type])
 
   // 🐶 Fait l'appel HTTP en utilisant 'useQuery'
   // 📑 https://react-query.tanstack.com/reference/useQueries
@@ -50,6 +51,9 @@ const NetflixById = ({logout}) => {
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${type}/${id}`)`
+  const {data: headerMovie} = useQuery(`${type}/${id}`, () =>
+    clientApi(`${type}/${id}`),
+  )
 
   React.useEffect(() => {
     const type = location.pathname.includes(TYPE_TV) ? TYPE_TV : TYPE_MOVIE
@@ -64,10 +68,10 @@ const NetflixById = ({logout}) => {
   // ⛏️ supprime cette condition et le `throw new Error`
   // cela sera géré automatiquement par la configuration 'react-query'
   // dans les exercice bonus
-  if (status === 'error') {
-    // sera catché par ErrorBoundary
-    throw new Error(error.message)
-  }
+  // if (status === 'error') {
+  //   // sera catché par ErrorBoundary
+  //   throw new Error(error.message)
+  // }
   return (
     <div>
       <NetflixAppBar logout={logout} />
@@ -113,20 +117,20 @@ const NetflixById = ({logout}) => {
         wideImage={false}
       />
       {/* ⛏️ supprime l'alerte sur le status === 'error' ça ce sera gerer par react-query */}
-      {status === 'error' ? (
+      {/* {status === 'error' ? (
         <div className={classes.alert}>
           <Alert severity="error">
             <AlertTitle>Une erreur est survenue</AlertTitle>
             Detail : {error.message}
           </Alert>
         </div>
-      ) : null}
+      ) : null} */}
       {/* ⛏️ supprime CircularProgress car s'est déja gérer par les <Skeleton> */}
-      {status === 'fetching' ? (
+      {/* {status === 'fetching' ? (
         <div className={classes.progress}>
           <CircularProgress />{' '}
         </div>
-      ) : null}
+      ) : null} */}
       <NetFlixFooter color="secondary" si />
       {/* 🐶 Nettoie tout les importes, classes, styles et hooks non utilisés  */}
     </div>

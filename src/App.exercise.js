@@ -9,9 +9,12 @@ import {useFetchData} from './utils/hooks'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 // 🐶 importe {QueryClient, QueryClientProvider} depuis 'react-query'
+import {QueryClient, QueryClientProvider} from 'react-query'
 
 // 🐶 instancie 'queryClient' avec `new QueryClient()`
 // 📑 https://react-query.tanstack.com/reference/QueryClientProvider#_top
+
+const queryClient = new QueryClient()
 
 const theme = createTheme({
   palette: {
@@ -61,17 +64,19 @@ function App() {
     // 🐶 Wrappe tout le rendu par <QueryClientProvider>
     // passe 'queryClient' en prop 'client'
     // 📑 https://react-query.tanstack.com/reference/QueryClientProvider#_top
-    <ThemeProvider theme={theme}>
-      {status === 'fetching' ? (
-        <Backdrop open={true}>
-          <CircularProgress color="primary" />
-        </Backdrop>
-      ) : authUser ? (
-        <AuthApp logout={logout} />
-      ) : (
-        <UnauthApp login={login} register={register} error={authError} />
-      )}
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        {status === 'fetching' ? (
+          <Backdrop open={true}>
+            <CircularProgress color="primary" />
+          </Backdrop>
+        ) : authUser ? (
+          <AuthApp logout={logout} />
+        ) : (
+          <UnauthApp login={login} register={register} error={authError} />
+        )}
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
 

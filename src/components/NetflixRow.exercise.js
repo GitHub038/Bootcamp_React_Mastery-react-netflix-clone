@@ -1,8 +1,9 @@
 import * as React from 'react'
 import {TYPE_MOVIE, imagePath400} from '../config'
 // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
-import {useFetchData} from '../utils/hooks'
+// import {useFetchData} from '../utils/hooks'
 // 🐶 importe {useQuery}
+import {useQuery} from 'react-query'
 import {clientApi} from '../utils/clientApi'
 import {Alert, AlertTitle} from '@mui/material'
 import {RowSkeleton} from './skeletons/RowSkeleton'
@@ -17,7 +18,7 @@ const NetflixRow = ({
   watermark = false,
 }) => {
   // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
-  const {data, error, status, execute} = useFetchData()
+  // const {data, error, status, execute} = useFetchData()
   const endpointLatest = `${type}/upcoming`
   const endpointPopular = `${type}/popular`
   const endpointTopRated = `${type}/top_rated`
@@ -46,9 +47,9 @@ const NetflixRow = ({
   }
 
   // ⛏️ supprime le hook 'useEffect' car on utilisera 'useQuery'
-  React.useEffect(() => {
-    execute(clientApi(`${endpoint}`))
-  }, [endpoint, execute])
+  // React.useEffect(() => {
+  //   execute(clientApi(`${endpoint}`))
+  // }, [endpoint, execute])
 
   // 🐶 Fait l'appel HTTP en utilisant 'useQuery'
   // 📑 https://react-query.tanstack.com/reference/useQueries
@@ -59,6 +60,9 @@ const NetflixRow = ({
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${endpoint}`)`
+  const {data, error, status} = useQuery(`${endpoint}`, () =>
+    clientApi(`${endpoint}`),
+  )
 
   const buildImagePath = data => {
     const image = wideImage ? data?.backdrop_path : data?.poster_path
@@ -69,7 +73,7 @@ const NetflixRow = ({
 
   // 🐶 change le status 'fetching' car 'useQuery' utilise 'loading' pour indiquer
   // un fetch en cours.
-  if (status === 'fetching' || status === 'idle') {
+  if (status === 'loading' || status === 'idle') {
     return <RowSkeleton title={title} wideImage={wideImage} />
   }
   if (status === 'error') {
