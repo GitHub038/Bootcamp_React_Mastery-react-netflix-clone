@@ -9,6 +9,7 @@ import {clientNetFlix, clientApi} from '../utils/clientApi'
 import * as authNetflix from '../utils/authNetflixProvider'
 import {Link} from 'react-router-dom'
 import {TYPE_MOVIE, TYPE_TV, imagePath400} from '../config'
+import {useMovie, useBookmark} from '../utils/hooksMovies.exercise'
 
 const NetflixBookmark = ({logout}) => {
   // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
@@ -40,10 +41,11 @@ const NetflixBookmark = ({logout}) => {
   //   const token = await authNetflix.getToken()
   //   return clientNetFlix(`bookmark`, {token})
   // }
-  const {data} = useQuery('bookmark', async () => {
-    const token = await authNetflix.getToken()
-    return clientNetFlix(`bookmark`, {token})
-  })
+  // const {data} = useQuery('bookmark', async () => {
+  //   const token = await authNetflix.getToken()
+  //   return clientNetFlix(`bookmark`, {token})
+  // })
+  const {data} = useBookmark()
 
   // 🐶 créé une constante 'id' qui sera soit le premier film en favoris ou 749274
   const id = data?.bookmark?.movies?.[0] ?? 749274
@@ -63,11 +65,12 @@ const NetflixBookmark = ({logout}) => {
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   // 🤖
   //clientApi(`${TYPE_MOVIE}/${id}`)
-  const {data: headerMovie} = useQuery(
-    `${TYPE_MOVIE}/${id}`,
-    clientApi(`${TYPE_MOVIE}/${id}`),
-  )
+  // const {data: headerMovie} = useQuery(
+  //   `${TYPE_MOVIE}/${id}`,
+  //   clientApi(`${TYPE_MOVIE}/${id}`),
+  // )
 
+  const headerMovie = useMovie({TYPE_MOVIE, id})
   return (
     <>
       <NetflixAppBar logout={logout} />

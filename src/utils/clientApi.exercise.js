@@ -4,11 +4,12 @@ import {apiKey, lang, API_URL, AUTH_URL} from '../config'
 
 // utilise 'sleep' pour simuler des api longue
 //const sleep = t => new Promise(resolve => setTimeout(resolve, t))
+const sleep = t => new Promise(resolve => setTimeout(resolve, t))
 
 const clientApi = async endpoint => {
   const page = 1
   const startChar = endpoint.includes('?') ? `&` : `?`
-  //await sleep(5000)
+  await sleep(5000)
   const keyLang = `${startChar}api_key=${apiKey}&language=${lang}&page=${page}`
   // 🐶 gère le catch pour extraire le message
   // .catch(error => {
@@ -23,7 +24,18 @@ const clientApi = async endpoint => {
   //   }
   // })
 
-  return axios.get(`${API_URL}/${endpoint}${keyLang}`)
+  //  return axios.get(`${API_URL}/${endpoint}${keyLang}`)
+  return axios.get(`${API_URL}/${endpoint}${keyLang}`).catch(error => {
+    if (error.response) {
+      const err = {
+        ...error.response,
+        message: error.response?.data?.status_message,
+      }
+      return Promise.reject(err)
+    } else {
+      return Promise.reject(error)
+    }
+  })
 }
 
 const clientAuth = (endpoint, {token, data}) => {

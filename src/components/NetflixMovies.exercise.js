@@ -14,6 +14,7 @@ import {makeStyles} from '@mui/styles'
 import {useQuery} from 'react-query'
 import {TYPE_MOVIE} from '../config'
 import './Netflix.css'
+import {useMovie} from '../utils/hooksMovies.exercise'
 
 const useStyles = makeStyles(theme => ({
   alert: {
@@ -47,9 +48,10 @@ const NetflixMovies = ({logout}) => {
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${type}/${defaultMovieId}`)`
-  const {data: headerMovie} = useQuery(`${type}/${defaultMovieId}`, () =>
-    clientApi(`${type}/${defaultMovieId}`),
-  )
+  // const {data: headerMovie} = useQuery(`${type}/${defaultMovieId}`, () =>
+  //   clientApi(`${type}/${defaultMovieId}`),
+  // )
+  const headerMovie = useMovie(type, defaultMovieId)
 
   // ⛏️ supprime cette condition et le `throw new Error`
   // cela sera géré automatiquement par la configuration 'react-query'

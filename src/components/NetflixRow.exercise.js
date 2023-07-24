@@ -8,6 +8,7 @@ import {clientApi} from '../utils/clientApi'
 import {Alert, AlertTitle} from '@mui/material'
 import {RowSkeleton} from './skeletons/RowSkeleton'
 import {Link} from 'react-router-dom'
+import {useMovie, useMovieFilter} from '../utils/hooksMovies.exercise'
 
 const NetflixRow = ({
   title = '',
@@ -19,32 +20,32 @@ const NetflixRow = ({
 }) => {
   // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
   // const {data, error, status, execute} = useFetchData()
-  const endpointLatest = `${type}/upcoming`
-  const endpointPopular = `${type}/popular`
-  const endpointTopRated = `${type}/top_rated`
-  const endpointGenre = `discover/${type}?with_genres=${param}`
-  const endpointTrending = `trending/${type}/day`
+  // const endpointLatest = `${type}/upcoming`
+  // const endpointPopular = `${type}/popular`
+  // const endpointTopRated = `${type}/top_rated`
+  // const endpointGenre = `discover/${type}?with_genres=${param}`
+  // const endpointTrending = `trending/${type}/day`
 
-  let endpoint
-  switch (filter) {
-    case 'populaire':
-      endpoint = endpointPopular
-      break
-    case 'latest':
-      endpoint = endpointLatest
-      break
-    case 'toprated':
-      endpoint = endpointTopRated
-      break
-    case 'genre':
-      endpoint = endpointGenre
-      break
-    case 'trending':
-      endpoint = endpointTrending
-      break
-    default:
-      throw new Error('Type non supporté')
-  }
+  // let endpoint
+  // switch (filter) {
+  //   case 'populaire':
+  //     endpoint = endpointPopular
+  //     break
+  //   case 'latest':
+  //     endpoint = endpointLatest
+  //     break
+  //   case 'toprated':
+  //     endpoint = endpointTopRated
+  //     break
+  //   case 'genre':
+  //     endpoint = endpointGenre
+  //     break
+  //   case 'trending':
+  //     endpoint = endpointTrending
+  //     break
+  //   default:
+  //     throw new Error('Type non supporté')
+  // }
 
   // ⛏️ supprime le hook 'useEffect' car on utilisera 'useQuery'
   // React.useEffect(() => {
@@ -60,9 +61,11 @@ const NetflixRow = ({
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${endpoint}`)`
-  const {data, error, status} = useQuery(`${endpoint}`, () =>
-    clientApi(`${endpoint}`),
-  )
+  // const {data, error, status} = useQuery(`${endpoint}`, () =>
+  //   clientApi(`${endpoint}`),
+  // )
+
+  const data = useMovieFilter(type, filter, param)
 
   const buildImagePath = data => {
     const image = wideImage ? data?.backdrop_path : data?.poster_path
@@ -73,22 +76,25 @@ const NetflixRow = ({
 
   // 🐶 change le status 'fetching' car 'useQuery' utilise 'loading' pour indiquer
   // un fetch en cours.
-  if (status === 'loading' || status === 'idle') {
+  if (!data) {
     return <RowSkeleton title={title} wideImage={wideImage} />
   }
-  if (status === 'error') {
-    return (
-      <Alert severity="error">
-        <AlertTitle>Une erreur est survenue</AlertTitle>
-        Detail : {error.message}
-      </Alert>
-    )
-  }
+  // if (status === 'loading' || status === 'idle') {
+  //   return <RowSkeleton title={title} wideImage={wideImage} />
+  // }
+  // if (status === 'error') {
+  //   return (
+  //     <Alert severity="error">
+  //       <AlertTitle>Une erreur est survenue</AlertTitle>
+  //       Detail : {error.message}
+  //     </Alert>
+  //   )
+  // }
   return (
     <div className="row">
       <h2>{title}</h2>
       <div className="row__posters">
-        {data.data.results.map(movie => {
+        {data.map(movie => {
           return (
             <Link key={movie.id} to={`/${type}/${movie.id}`}>
               <div className={`row__poster row__posterLarge ${watermarkClass}`}>

@@ -14,6 +14,8 @@ import {useQuery} from 'react-query'
 import {TYPE_MOVIE, TYPE_TV} from '../config'
 import {useParams, useLocation} from 'react-router-dom'
 import './Netflix.css'
+import {useMovieFilter} from 'utils/hooksMovies.exercise'
+import {useMovie, useBookmark} from '../utils/hooksMovies.exercise'
 
 const useStyles = makeStyles(theme => ({
   alert: {
@@ -51,9 +53,11 @@ const NetflixById = ({logout}) => {
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${type}/${id}`)`
-  const {data: headerMovie} = useQuery(`${type}/${id}`, () =>
-    clientApi(`${type}/${id}`),
-  )
+  // const {data: headerMovie} = useQuery(`${type}/${id}`, () =>
+  //   clientApi(`${type}/${id}`),
+  // )
+
+  const {data: headerMovie} = useMovie(type, id)
 
   React.useEffect(() => {
     const type = location.pathname.includes(TYPE_TV) ? TYPE_TV : TYPE_MOVIE

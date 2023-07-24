@@ -11,6 +11,11 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert from '@mui/material/Alert'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {useQueryClient} from 'react-query'
+import {
+  useAddBookmark,
+  useBookmark,
+  useDeleteBookmark,
+} from 'utils/hooksMovies.exercise'
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -35,7 +40,7 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   // 📑 https://react-query.tanstack.com/guides/migrating-to-react-query-3#mutationmutate-no-longer-return-a-promise
 
   // 🐶 créé un state 'mutateBookmarkError'
-  const [mutateBookmarkError, setMutateBookmarkError] = useState()
+  const [mutateBookmarkError, setMutateBookmarkError] = useState(false)
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false)
   const title = type === TYPE_MOVIE ? movie?.title : movie?.name
@@ -74,10 +79,11 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   //   const token = await authNetflix.getToken()
   //   return clientNetFlix(`bookmark`, {token})
   // }
-  const {data} = useQuery(`bookmark`, async () => {
-    const token = await authNetflix.getToken()
-    return clientNetFlix(`bookmark`, {token})
-  })
+  // const {data} = useQuery(`bookmark`, async () => {
+  //   const token = await authNetflix.getToken()
+  //   return clientNetFlix(`bookmark`, {token})
+  // })
+  const data = useBookmark()
 
   // ⛏️ supprime le hook 'useEffect'
   // React.useEffect(() => {
@@ -107,27 +113,37 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   //  b. onError : une fonction avec un parametre (error)
   //    - setSnackbarOpen(true)
   //    - setMutateBookmarkError(error)
-  const {addMutation} = useMutation(
-    async ({type, id}) => {
-      const token = await authNetflix.getToken()
-      return clientNetFlix(`bookmark/${type}`, {
-        token,
-        data: {id},
-        method: 'POST',
-      })
+  // const {addMutation} = useMutation(
+  //   async ({type, id}) => {
+  //     const token = await authNetflix.getToken()
+  //     return clientNetFlix(`bookmark/${type}`, {
+  //       token,
+  //       data: {id},
+  //       method: 'POST',
+  //     })
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries('bookmark')
+  //       setSnackbarOpen(true)
+  //       setMutateBookmarkError()
+  //     },
+  //     onError: error => {
+  //       setSnackbarOpen(true)
+  //       setMutateBookmarkError(error)
+  //     },
+  //   },
+  // )
+  const addMutation = useAddBookmark({
+    onSuccess: () => {
+      setSnackbarOpen(true)
+      setMutateBookmarkError()
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('bookmark')
-        setSnackbarOpen(true)
-        setMutateBookmarkError()
-      },
-      onError: error => {
-        setSnackbarOpen(true)
-        setMutateBookmarkError(error)
-      },
+    onError: error => {
+      setSnackbarOpen(true)
+      setMutateBookmarkError(error)
     },
-  )
+  })
 
   // 🐶 utilise le hook 'useMutation' pour supprimer aux favoris
   // 🤖 `const deleteMutation = useMutation`
@@ -152,27 +168,37 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   //  b. onError : une fonction avec un parametre (error)
   //    - setSnackbarOpen(true)
   //    - setMutateBookmarkError(error)
-  const {deleteMutation} = useMutation(
-    async ({type, id}) => {
-      const token = await authNetflix.getToken()
-      return clientNetFlix(`bookmark/${type}`, {
-        token,
-        data: {id},
-        method: 'DELETE',
-      })
+  // const {deleteMutation} = useMutation(
+  //   async ({type, id}) => {
+  //     const token = await authNetflix.getToken()
+  //     return clientNetFlix(`bookmark/${type}`, {
+  //       token,
+  //       data: {id},
+  //       method: 'DELETE',
+  //     })
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries('bookmark')
+  //       setSnackbarOpen(true)
+  //       setMutateBookmarkError()
+  //     },
+  //     onError: error => {
+  //       setSnackbarOpen(true)
+  //       setMutateBookmarkError(error)
+  //     },
+  //   },
+  // )
+  const deleteMutation = useDeleteBookmark({
+    onSuccess: () => {
+      setSnackbarOpen(true)
+      setMutateBookmarkError()
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('bookmark')
-        setSnackbarOpen(true)
-        setMutateBookmarkError()
-      },
-      onError: error => {
-        setSnackbarOpen(true)
-        setMutateBookmarkError(error)
-      },
+    onError: error => {
+      setSnackbarOpen(true)
+      setMutateBookmarkError(error)
     },
-  )
+  })
 
   // 🐶 'handleAddToListClick' va appeler la fonction 'mutate' de 'useMutation'
   // 📑 https://react-query.tanstack.com/guides/migrating-to-react-query-3#mutationmutate-no-longer-return-a-promise

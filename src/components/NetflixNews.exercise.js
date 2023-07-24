@@ -14,20 +14,20 @@ import {makeStyles} from '@mui/styles'
 import {useQuery} from 'react-query'
 import {TYPE_MOVIE, TYPE_TV} from '../config'
 import './Netflix.css'
-
-const useStyles = makeStyles(theme => ({
-  alert: {
-    width: '50%',
-    margin: 'auto',
-    marginBotton: '50px',
-  },
-  progress: {
-    marginLeft: '30px',
-  },
-}))
+import {useMovie} from '../utils/hooksMovies.exercise'
+// const useStyles = makeStyles(theme => ({
+//   alert: {
+//     width: '50%',
+//     margin: 'auto',
+//     marginBotton: '50px',
+//   },
+//   progress: {
+//     marginLeft: '30px',
+//   },
+// }))
 
 const NetflixNews = ({logout}) => {
-  const classes = useStyles()
+  // const classes = useStyles()
   // ⛏️ supprime 'useFetchData' car nous ne l'utiliseront plus ici
   // const {data: headerMovie, error, status, execute} = useFetchData()
   const [type] = React.useState(getRandomType())
@@ -47,10 +47,11 @@ const NetflixNews = ({logout}) => {
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${type}/${defaultMovieId}`)`
-  const {data: headerMovie} = useQuery(
-    `${type}/${defaultMovieId}`,
-    clientApi(`${type}/${defaultMovieId}`),
-  )
+  // const {data: headerMovie} = useQuery(
+  //   `${type}/${defaultMovieId}`,
+  //   clientApi(`${type}/${defaultMovieId}`),
+  // )
+  const headerMovie = useMovie(type, defaultMovieId)
 
   // ⛏️ supprime cette condition et le `throw new Error`
   // cela sera géré automatiquement par la configuration 'react-query'
