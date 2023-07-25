@@ -10,7 +10,7 @@ import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 // 🐶 importe {QueryClient, QueryClientProvider} depuis 'react-query'
 import {QueryClient, QueryClientProvider} from 'react-query'
-
+import {ReactQueryDevtools} from 'react-query/devtools'
 // 🐶 instancie 'queryClient' avec `new QueryClient()`
 // 📑 https://react-query.tanstack.com/reference/QueryClientProvider#_top
 
@@ -28,7 +28,8 @@ const queryClient = new QueryClient({
       },
     },
     mutations: {
-      useErrorBoundary: true,
+      // useErrorBoundary: true,
+      useErrorBoundary: false,
       refetchOnWindowFocus: false,
       retryDelay: 500,
       retry: 1,
@@ -79,6 +80,7 @@ function App() {
   const logout = () => {
     authNetflix.logout()
     setData(null)
+    queryClient.clear()
   }
 
   return (
@@ -97,6 +99,9 @@ function App() {
           <UnauthApp login={login} register={register} error={authError} />
         )}
       </ThemeProvider>
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   )
 }

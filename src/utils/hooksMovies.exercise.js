@@ -8,6 +8,13 @@ import {useQuery, useMutation, useQueryClient} from 'react-query'
 import {clientApi, clientNetFlix} from './clientApi'
 import * as authNetflix from './authNetflixProvider'
 
+const useSearchMovie = query => {
+  const {data} = useQuery(`/search/multi?query=${query}`, () =>
+    clientApi(`/search/multi?query=${query}`),
+  )
+  return data?.data.results ?? []
+}
+
 const useMovie = (type, id) => {
   // 🐶 utilise 'useQuery' pour faire appel à `${type}/${id}`
   // retourne 'data'
@@ -203,6 +210,7 @@ const useDeleteBookmark = (
 export {
   useMovie,
   useMovieFilter,
+  useSearchMovie,
   useBookmark,
   useAddBookmark,
   useDeleteBookmark,

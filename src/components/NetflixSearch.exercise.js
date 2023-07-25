@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {NetflixAppBar} from './NetflixAppBar'
 import {NetFlixFooter} from './NetFlixFooter'
 import {NetflixHeader} from './NetflixHeader'
@@ -6,33 +6,37 @@ import {TYPE_MOVIE, TYPE_TV, imagePath400} from '../config'
 import {Link} from 'react-router-dom'
 import {RowSkeleton} from './skeletons/RowSkeleton'
 // 🐶 import 'useParams' de 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
 // 🐶 import 'useSearchMovie' et  'useMovie'
 //import {useSearchMovie, useMovie} from '../utils/hooksMovies'
+import {useSearchMovie, useMovie} from '../utils/hooksMovies'
 
 import './Netflix.css'
 
 const NetflixSearch = ({logout}) => {
   // 🐶 utilise le hook 'useParams' pour récuperer {query}
+  let {query} = useParams()
 
   // 🐶 utilise le hook 'useSearchMovie' pour récuperer 'data' : les réultats de recherche
-  const data = []
+  // const data = []
+  const data = useSearchMovie(query)
   // 🐶 utilise le hook 'useMovie(TYPE_MOVIE, 785752)' pour récuperer un film par defaut (defaultMovie)
   // si aucun résultat n'est trouvé, cela permettra d'avoir un film dans le header
-
+  const defaultMovie = useMovie(TYPE_MOVIE, 785752)
   // 🐶 créé une constante 'headerMovie' qui sera le film passé dans le <NetflixHeader>
   // prendre le premier element de 'data' si disponible
   // sinon prendre 'defaultMovie'
-  const headerMovie = null
+  const headerMovie = data?.[0] ?? defaultMovie
   // 🐶 créé une constante type  `headerMovie?.media_type`
   // qui sera passé en props de <NetflixHeader>
-  const type = ''
+  const type = 'headerMovie?.media_type'
   // 🐶 filtre les series et les films grace au champ 'media_type'
   // des résultats retournés dans 'data'
   // media_type === TYPE_MOVIE
   // media_type === TYPE_TV
-  const movies = []
-  const series = []
+  const movies = data?.filter(currData => currData.media_type === TYPE_MOVIE)
+  const series = data?.filter(currData => currData.media_type === TYPE_TV)
 
   return (
     <div>
