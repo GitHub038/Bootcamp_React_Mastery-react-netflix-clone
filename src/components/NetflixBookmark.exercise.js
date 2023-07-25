@@ -45,7 +45,7 @@ const NetflixBookmark = ({logout}) => {
   //   const token = await authNetflix.getToken()
   //   return clientNetFlix(`bookmark`, {token})
   // })
-  const {data} = useBookmark()
+  const data = useBookmark()
 
   // 🐶 créé une constante 'id' qui sera soit le premier film en favoris ou 749274
   const id = data?.bookmark?.movies?.[0] ?? 749274
@@ -70,11 +70,11 @@ const NetflixBookmark = ({logout}) => {
   //   clientApi(`${TYPE_MOVIE}/${id}`),
   // )
 
-  const headerMovie = useMovie({TYPE_MOVIE, id})
+  const headerMovie = useMovie(TYPE_MOVIE, id)
   return (
     <>
       <NetflixAppBar logout={logout} />
-      <NetflixHeader movie={headerMovie?.data} type={TYPE_MOVIE} />
+      <NetflixHeader movie={headerMovie} type={TYPE_MOVIE} />
       <div className="row">
         <h2>Films favoris</h2>
         <div className="row__posters">
@@ -123,7 +123,8 @@ const Card = ({id, type, watermark, wideImage}) => {
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   // 🤖
   //clientApi(`${type}/${id}`))
-  const {data} = useQuery(`${type}/${id}`, () => clientApi(`${type}/${id}`))
+  // const {data} = useQuery(`${type}/${id}`, () => clientApi(`${type}/${id}`))
+  const data = useMovie(type, id)
 
   const [image, setImage] = React.useState('')
 

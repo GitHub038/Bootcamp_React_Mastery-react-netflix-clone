@@ -12,7 +12,7 @@ const useMovie = (type, id) => {
   // 🐶 utilise 'useQuery' pour faire appel à `${type}/${id}`
   // retourne 'data'
   const {data} = useQuery(`${type}/${id}`, () => clientApi(`${type}/${id}`))
-  return data
+  return data?.data
 }
 
 const useMovieFilter = (type, filter, param) => {
@@ -153,9 +153,9 @@ const useDeleteBookmark = (
   // const queryClient = useQueryClient()
   const queryClient = useQueryClient()
   // 🐶 utilise 'useMutation' supprimer un bookmark
-  // utilise le de la meme maniere que dans 'NetFlixHeader'
   // supprime les dependances aux states de 'NetFlixHeader'
   // à la place appelle les fonction passer en parametres
+  // utilise le de la meme maniere que dans 'NetFlixHeader'
   // {
   //   onSuccess: () => {
   //     queryClient.invalidateQueries('bookmark')

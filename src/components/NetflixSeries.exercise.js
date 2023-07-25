@@ -14,6 +14,7 @@ import {makeStyles} from '@mui/styles'
 import {useQuery} from 'react-query'
 import {TYPE_TV} from '../config'
 import './Netflix.css'
+import {useMovie} from '../utils/hooksMovies'
 
 const useStyles = makeStyles(theme => ({
   alert: {
@@ -47,9 +48,10 @@ const NetflixSeries = ({logout}) => {
   //
   // 2. Le deuxieme paramètre est une fonction qui recupère les données
   //  dans notre cas on utilisera `clientApi(`${type}/${defaultMovieId}`)`
-  const {data: headerMovie} = useQuery(`${type}/${defaultMovieId}`, () =>
-    clientApi(`${type}/${defaultMovieId}`),
-  )
+  // const {data: headerMovie} = useQuery(`${type}/${defaultMovieId}`, () =>
+  //   clientApi(`${type}/${defaultMovieId}`),
+  // )
+  const headerMovie = useMovie(type, defaultMovieId)
 
   // ⛏️ supprime cette condition et le `throw new Error`
   // cela sera géré automatiquement par la configuration 'react-query'
@@ -61,7 +63,7 @@ const NetflixSeries = ({logout}) => {
   return (
     <div>
       <NetflixAppBar logout={logout} />
-      <NetflixHeader movie={headerMovie?.data} type={type} />
+      <NetflixHeader movie={headerMovie} type={type} />
       <NetflixRow
         wideImage={true}
         watermark={true}

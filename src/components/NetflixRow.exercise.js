@@ -9,6 +9,7 @@ import {Alert, AlertTitle} from '@mui/material'
 import {RowSkeleton} from './skeletons/RowSkeleton'
 import {Link} from 'react-router-dom'
 import {useMovie, useMovieFilter} from '../utils/hooksMovies.exercise'
+import {PanoramaFishEyeOutlined} from '@mui/icons-material'
 
 const NetflixRow = ({
   title = '',

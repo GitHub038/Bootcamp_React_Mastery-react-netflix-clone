@@ -57,7 +57,7 @@ const NetflixById = ({logout}) => {
   //   clientApi(`${type}/${id}`),
   // )
 
-  const {data: headerMovie} = useMovie(type, id)
+  const headerMovie = useMovie(type, id)
 
   React.useEffect(() => {
     const type = location.pathname.includes(TYPE_TV) ? TYPE_TV : TYPE_MOVIE
@@ -79,7 +79,7 @@ const NetflixById = ({logout}) => {
   return (
     <div>
       <NetflixAppBar logout={logout} />
-      <NetflixHeader movie={headerMovie?.data} type={type} />
+      <NetflixHeader movie={headerMovie} type={type} />
       <NetflixRow
         wideImage={true}
         watermark={true}

@@ -40,7 +40,7 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
   // 📑 https://react-query.tanstack.com/guides/migrating-to-react-query-3#mutationmutate-no-longer-return-a-promise
 
   // 🐶 créé un state 'mutateBookmarkError'
-  const [mutateBookmarkError, setMutateBookmarkError] = useState(false)
+  const [mutateBookmarkError, setMutateBookmarkError] = useState()
 
   const [snackbarOpen, setSnackbarOpen] = React.useState(false)
   const title = type === TYPE_MOVIE ? movie?.title : movie?.name
@@ -294,7 +294,7 @@ const NetflixHeader = ({movie, type = TYPE_MOVIE}) => {
           onClose={() => setSnackbarOpen(false)}
         >
           <Alert severity="error" sx={{width: '100%'}}>
-            Problème lors de l'ajout : {mutateBookmarkError.error}
+            Problème lors de l'ajout : {mutateBookmarkError.message}
           </Alert>
         </Snackbar>
       ) : null}
