@@ -14,7 +14,7 @@ const NetflixMovies = ({logout}) => {
   const headerMovie = useMovie(type, defaultMovieId)
   return (
     <div>
-      <NetflixAppBar logout={logout} />
+      <NetflixAppBar />
       <NetflixHeader movie={headerMovie} type={type} />
       <NetflixRow
         wideImage={true}

@@ -8,6 +8,7 @@ import {styled, alpha} from '@mui/material/styles'
 import InputBase from '@mui/material/InputBase'
 import {useNavigate} from 'react-router-dom'
 // 🐶 importe 'AuthContext'
+import {useAuth} from 'context/AuthContext.exercise'
 
 const Search = styled('div')(({theme}) => ({
   marginRight: '10px',
@@ -52,8 +53,10 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
   },
 }))
 // ⛏️ supprime le prop 'logout il sera récuperer de 'AuthContext'
-const NetflixAppBar = ({logout}) => {
+const NetflixAppBar = () => {
+  // const NetflixAppBar = ({logout}) => {
   // 🐶 utilise le Hook useContext pour récupérer {logout} de 'AuthContext'
+  const {logout} = useAuth()
   const navigate = useNavigate()
 
   const [appBarStyle, setAppBarStyle] = React.useState({
