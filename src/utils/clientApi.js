@@ -33,7 +33,10 @@ const clientAuth = (endpoint, {token, data}) => {
     : axios.get(`${AUTH_URL}/${endpoint}`, config)
 }
 
-const clientNetFlix = async (endpoint, {token, data, method = 'GET'}) => {
+const clientNetFlix = async (
+  endpoint,
+  {token = token, data, method = 'GET'},
+) => {
   const config = {
     method,
     url: `${AUTH_URL}/${endpoint}`,

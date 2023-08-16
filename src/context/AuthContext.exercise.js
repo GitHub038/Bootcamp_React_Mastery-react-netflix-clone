@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import * as React from 'react'
-import {clientAuth} from './../utils/clientApi'
+import {clientAuth, clientNetFlix} from './../utils/clientApi'
 import {useFetchData} from './../utils/hooks'
 import * as authNetflix from './../utils/authNetflixProvider'
 import Backdrop from '@mui/material/Backdrop'
@@ -18,6 +18,13 @@ const useAuth = () => {
     throw new Error('useAuth doit être utilisé avec <AuthContext.Provider>')
   }
   return context
+}
+
+const useClientNetflix = () => {
+  const {
+    authUser: {token},
+  } = useAuth()
+  return (endpoint, data) => clientNetFlix(endpoint, {...data, token})
 }
 
 async function getUserByToken() {
@@ -89,4 +96,4 @@ const AuthProvider = props => {
   throw new Error('status invalide')
 }
 
-export {AuthContext, useAuth, AuthProvider}
+export {AuthContext, useAuth, AuthProvider, useClientNetflix}
