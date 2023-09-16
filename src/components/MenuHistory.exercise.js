@@ -28,6 +28,10 @@ import {useTheme} from '@mui/material/styles'
 //import {TYPE_MOVIE, TYPE_TV, imagePath400} from '../config'
 //import {useNavigate} from 'react-router-dom'
 //import {useNavigateMovie} from '../context/HistoryMoviesContext'
+import {TYPE_MOVIE, TYPE_TV, imagePath400} from '../config'
+import {useNavigate} from 'react-router-dom'
+import {useNavigateMovie} from '../context/HistoryMoviesContext'
+import {Title} from '@mui/icons-material'
 
 const StyledMenu = styled(props => (
   <Menu
@@ -74,6 +78,7 @@ const StyledMenu = styled(props => (
 
 function MenuHistory({style}) {
   // 🐶 utilise le hook 'useNavigateMovie' pour récuperer {series, movies}
+  const {series, movies} = useNavigateMovie()
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
   const handleClick = event => {
@@ -101,29 +106,36 @@ function MenuHistory({style}) {
         </MenuItem>
 
         {/* 🐶 utilise `.map` pour parcourir 'movies' et afficher <MenuItem> <MenuHistoryCard> pour chaque film  */}
-        <MenuItem onClick={handleClose} disableRipple>
-          <MenuHistoryCard wideImage={true} />
-        </MenuItem>
+        {movies.map((movie, index) => (
+          <MenuItem key={index} onClick={handleClose} disableRipple>
+            <MenuHistoryCard wideImage={true} movie={movie} type={TYPE_MOVIE} />
+          </MenuItem>
+        ))}
         <Divider sx={{my: 0.5}} />
         {/* 🐶 utilise `.map` pour parcourir 'series' et afficher <MenuItem> <MenuHistoryCard>pour chaque serie  */}
-        <MenuItem onClick={handleClose} disableRipple>
-          <MenuHistoryCard wideImage={true} />
-        </MenuItem>
+        {series.map((serie, index) => (
+          <MenuItem key={index} onClick={handleClose} disableRipple>
+            <MenuHistoryCard wideImage={true} movie={serie} type={TYPE_TV} />
+          </MenuItem>
+        ))}
         {/* 🐶 afficher le dernier MenuItem si il n'y a pas d'historique (series et movies vide)  */}
-        <MenuItem onClick={handleClose} disableRipple>
-          <DoNotDisturbIcon />
-          Pas d'historique
-        </MenuItem>
+        {series.length === 0 && movies.length === 0 ? (
+          <MenuItem onClick={handleClose} disableRipple>
+            <DoNotDisturbIcon />
+            Pas d'historique
+          </MenuItem>
+        ) : null}
       </StyledMenu>
     </div>
   )
 }
 // 🐶 créé les props 'movie', 'type', 'wideImage'
-function MenuHistoryCard() {
+function MenuHistoryCard({movie, type, wideImage = true}) {
   const theme = useTheme()
   // 🐶 utilise le hook 'useNavigate' de 'react-router-dom' il premettra
   // de faire une redirection vers la page du film lors d'un clique sur la Card
   // 🤖 const navigate = useNavigate()
+  const navigate = useNavigate()
 
   // 🐶 décommente la fonction 'buildImagePath' elle sera utilisé
   //  pour construire l'url de l'image
@@ -131,24 +143,35 @@ function MenuHistoryCard() {
   //   const image = wideImage ? data?.backdrop_path : data?.poster_path
   //   return image ? `${imagePath400}${image}` : null
   // }
+  const buildImagePath = data => {
+    const image = wideImage ? data?.backdrop_path : data?.poster_path
+    return image ? `${imagePath400}${image}` : null
+  }
 
   // 🐶 utilise soit 'movie.name' (film) soit 'movie.original_title' (serie) pour le title
   // Limite à 20 caractères
-  const title = 'sample' //(movie?.name ?? movie.original_title).substring(0, 20)
+  // const title = 'sample' //(movie?.name ?? movie.original_title).substring(0, 20)
+  const title = (movie?.name ?? movie?.original_title).substring(0, 20)
 
   // 🐶 utilise  'movie.overview' pour la description
-  // Limite à 20 caractères et concatène avec ' ...'
-  const description = ''
+  // Limite à 30 caractères et concatène avec ' ...'
+  // const description = ''
+  const description = movie?.overview.substring(0, 30) + '...'
 
   // 🐶 créé une fonction 'handleClick' qui redirigera vers la page film/serie
   // 🤖 utilise `navigate()` 'type' et 'movie.id'
+  const handleClick = () => {
+    navigate(`/${type}/${movie.id}`)
+  }
+
   return (
     <Card sx={{display: 'flex'}}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <CardContent sx={{flex: '1 0 auto'}}>
           <Typography component="div" variant="h5" style={{width: '250px'}}>
             {/* 🐶 utilise 'title' */}
-            Super Film
+            {/* Super Film */}
+            {title}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -157,7 +180,8 @@ function MenuHistoryCard() {
             style={{width: '250px'}}
           >
             {/* 🐶 utilise 'description' */}
-            C'est l'histoire de ...
+            {/* C'est l'histoire de ... */}
+            {description}
           </Typography>
         </CardContent>
         <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
@@ -183,11 +207,13 @@ function MenuHistoryCard() {
 
       <CardMedia
         // 🐶 utilise 'handleClick' sur 'onClick'
+        onClick={handleClick}
         component="img"
         sx={{width: 200}}
         // 🐶 utilise 'buildImagePath' sur 'image'
-        image="/images/sample.jpg"
-        alt="sample"
+        // image="/images/sample.jpg"
+        image={buildImagePath(movie)}
+        alt={title}
       />
     </Card>
   )
