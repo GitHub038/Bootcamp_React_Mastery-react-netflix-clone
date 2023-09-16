@@ -10,6 +10,7 @@ import {useMovie} from '../utils/hooksMovies'
 import {useNavigateMovie} from '../context/HistoryMoviesContext'
 // affiché dans la page, dans le contexte 'HistoryMoviesContext'
 import './Netflix.css'
+import {useAddToHistory} from 'context/HistoryMoviesContext'
 
 const NetflixById = ({logout}) => {
   let {tvId, movieId} = useParams()
@@ -22,7 +23,8 @@ const NetflixById = ({logout}) => {
 
   // 🐶 utilise le hook 'useNavigateMovie' pour acceder à  {series, movies, setMovies, setSeries}
   // const {series, movies, setMovies, setSeries} = useNavigateMovie()
-  const {addMovie, addSerie} = useNavigateMovie()
+  // const {addMovie, addSerie} = useNavigateMovie()
+
   // 🐶 créé une constante qui correspondra on nombre d'elements max dans l'historique (sera utilisé plus tard)
   // 🤖 `const MAX_ELEMENTS = 3`
   // const MAX_ELEMENTS = 3
@@ -38,13 +40,15 @@ const NetflixById = ({logout}) => {
   // exemple :
   React.useEffect(() => {
     if (headerMovie) {
-      type === TYPE_TV
-        ? // setSeries([headerMovie, ...series.slice(0, MAX_ELEMENTS - 1)])
-          addSerie(headerMovie)
-        : addMovie(headerMovie)
+      // type === TYPE_TV
+      // ? // setSeries([headerMovie, ...series.slice(0, MAX_ELEMENTS - 1)])
+      // addSerie(headerMovie)
+      // : addMovie(headerMovie)
       // setMovies([headerMovie, ...movies.slice(0, MAX_ELEMENTS - 1)])
     }
   }, [headerMovie])
+
+  useAddToHistory(headerMovie, type)
 
   React.useEffect(() => {
     const type = location.pathname.includes(TYPE_TV) ? TYPE_TV : TYPE_MOVIE

@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import * as React from 'react'
+import {TYPE_TV} from 'config'
+
 // 🐶 créé un contexte 'HistoryMovieContext' avec 'createContext'
 // const HistoryMovieContext = null
 const HistoryMovieContext = React.createContext()
 const MAX_ELEMENTS = 3
-
 // Bonus 1
 const reducer = (state, action) => {
   switch (action.type) {
@@ -68,4 +69,20 @@ const useNavigateMovie = () => {
   }
   return context
 }
-export {HistoryMovieContext, useNavigateMovie, HistoryMovieProvider}
+
+const useAddToHistory = (movie, type = TYPE_TV) => {
+  const {addMovie, addSerie} = useNavigateMovie()
+
+  React.useEffect(() => {
+    if (movie) {
+      type === TYPE_TV ? addSerie(movie) : addMovie(movie)
+    }
+  }, [movie])
+}
+
+export {
+  HistoryMovieContext,
+  useNavigateMovie,
+  HistoryMovieProvider,
+  useAddToHistory,
+}
