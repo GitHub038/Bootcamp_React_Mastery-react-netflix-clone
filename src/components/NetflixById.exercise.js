@@ -21,10 +21,11 @@ const NetflixById = ({logout}) => {
   const headerMovie = useMovie(type, id)
 
   // 🐶 utilise le hook 'useNavigateMovie' pour acceder à  {series, movies, setMovies, setSeries}
-  const {series, movies, setMovies, setSeries} = useNavigateMovie()
+  // const {series, movies, setMovies, setSeries} = useNavigateMovie()
+  const {addMovie, addSerie} = useNavigateMovie()
   // 🐶 créé une constante qui correspondra on nombre d'elements max dans l'historique (sera utilisé plus tard)
   // 🤖 `const MAX_ELEMENTS = 3`
-  const MAX_ELEMENTS = 3
+  // const MAX_ELEMENTS = 3
 
   // 🐶 nous voulons maintenant mettre à jour la liste des films/series du context.
   // utilise 'useEffect' avec une dependance à 'headerMovie'
@@ -38,8 +39,10 @@ const NetflixById = ({logout}) => {
   React.useEffect(() => {
     if (headerMovie) {
       type === TYPE_TV
-        ? setSeries([headerMovie, ...series.slice(0, MAX_ELEMENTS - 1)])
-        : setMovies([headerMovie, ...movies.slice(0, MAX_ELEMENTS - 1)])
+        ? // setSeries([headerMovie, ...series.slice(0, MAX_ELEMENTS - 1)])
+          addSerie(headerMovie)
+        : addMovie(headerMovie)
+      // setMovies([headerMovie, ...movies.slice(0, MAX_ELEMENTS - 1)])
     }
   }, [headerMovie])
 
