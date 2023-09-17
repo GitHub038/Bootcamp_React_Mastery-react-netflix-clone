@@ -19,6 +19,11 @@ const reducer = (state, action) => {
         ...state,
         movies: [action.payload, ...state.movies.slice(0, MAX_ELEMENTS - 1)],
       }
+    case 'clear':
+      return {
+        movies: [],
+        series: [],
+      }
     default:
       throw new Error('Action non supporté')
   }
@@ -48,7 +53,12 @@ const HistoryMovieProvider = props => {
     [dispatch],
   )
 
-  const value = {movies, series, addSerie, addMovie}
+  const clearHistory = React.useCallback(
+    () => dispatch({type: 'clear'}),
+    [dispatch],
+  )
+
+  const value = {movies, series, addSerie, addMovie, clearHistory}
 
   // retourne <HistoryMovieContext.Provider> en passant les props suivants :
   // - value = movies, series, setMovies, setSeries
@@ -70,6 +80,7 @@ const useNavigateMovie = () => {
   return context
 }
 
+//Bonus 2
 const useAddToHistory = (movie, type = TYPE_TV) => {
   const {addMovie, addSerie} = useNavigateMovie()
 
@@ -80,9 +91,16 @@ const useAddToHistory = (movie, type = TYPE_TV) => {
   }, [movie])
 }
 
+//Bonus 3
+const useClearHistory = () => {
+  const {clearHistory} = useNavigateMovie()
+  return clearHistory
+}
+
 export {
   HistoryMovieContext,
   useNavigateMovie,
   HistoryMovieProvider,
   useAddToHistory,
+  useClearHistory,
 }
