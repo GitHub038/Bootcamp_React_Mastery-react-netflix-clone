@@ -47,7 +47,10 @@ const HistoryMovieProvider = props => {
   }, [])
   const {series, movies} = state
   // 🐶 utilise useMemo pour mémoïser {movies, series, addMovie, addSerie, clearHistory}
-  const value = {movies, series, addMovie, addSerie, clearHistory}
+  // const value = {movies, series, addMovie, addSerie, clearHistory}
+  const value = React.useMemo(() => {
+    return {movies, series, addMovie, addSerie, clearHistory}
+  }, [movies, series, addMovie, addSerie, clearHistory])
   return <HistoryMovieContext.Provider value={value} {...props} />
 }
 
