@@ -4,6 +4,7 @@ import './index.css'
 import {App} from './App'
 import reportWebVitals from './reportWebVitals'
 //🐶 importe le composant <Profiler/>
+import {Profiler} from './components/Profiler'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,7 +12,9 @@ ReactDOM.render(
         dans un premier temps pour tester*/}
 
     {/* 🐶 Ensuite Wrappe 'App' avec le composant Profiler */}
-    <App />
+    <Profiler id="App Netflix" phases={['mount']}>
+      <App />
+    </Profiler>
   </React.StrictMode>,
   document.getElementById('root'),
 )
