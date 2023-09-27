@@ -1,15 +1,25 @@
 import React from 'react'
-
+import {clientAuth} from '../utils/clientApi'
 // 🐶 Cette fonction loguera les information de profil en rouge
-const logProfiler = data => {
-  console.log('%c profiler', 'color: LightCoral', data)
+let pile = []
+
+const logProfiler = () => {
+  if (!pile.length) {
+    return
+  }
+  console.log('%c profiler', 'color: LightCoral', pile)
+  clientAuth('monitoring', {data: pile})
+  pile = []
 }
 
+setInterval(logProfiler, 3000)
+
 // 🐶 passe les props 'phases' et ...props
-function Profiler({phases = [], ...props}) {
+function Profiler({appData, phases = [], ...props}) {
   // 🐶 créé une fonction handleRender qui fera le rendu du profiler
   // passe lui tous les paramètres du 'onRender'
   // 📝https://fr.reactjs.org/docs/profiler.html#onrender-callback
+
   const handleRender = (
     id,
     phase,
@@ -24,7 +34,9 @@ function Profiler({phases = [], ...props}) {
     // 🐶 appelle logProfiler avec un objet qui contier tous les parametres
     if (!phases.length || phases.includes(phase)) {
       // Si j'ai pas de phases ou une phase de "mount" ou "update" je log
-      logProfiler({
+      // Bonus 4
+      pile.push({
+        appData,
         id,
         phase,
         actualDuration,
@@ -33,6 +45,15 @@ function Profiler({phases = [], ...props}) {
         commitTime,
         interaction,
       })
+      // logProfiler({
+      //   id,
+      //   phase,
+      //   actualDuration,
+      //   baseDuration,
+      //   startTime,
+      //   commitTime,
+      //   interaction,
+      // })
     }
   }
 
