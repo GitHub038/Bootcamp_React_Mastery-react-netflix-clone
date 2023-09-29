@@ -6,23 +6,26 @@
 //import {AUTH_URL} from '../../config'
 import {server, rest} from 'mocks'
 import {AUTH_URL} from '../../config'
-import {clientAuth} from 'utils/clientApi'
+import {clientAuth, clientNetFlix} from 'utils/clientApi'
+
+import * as authNetflix from '../../utils/authNetflixProvider'
+jest.mock('../../utils/authNetflixProvider')
 
 // 🐶 appelle 'server.listen()' avant tous les tests
 // 🐶 appelle 'server.close()' après tous les tests
 // 🐶 appelle 'server.resetHandlers()' après chaque test
 // 📝 https://jestjs.io/fr/docs/setup-teardown
-beforeEach(() => {
-  server.listen()
-})
+// beforeEach(() => {
+//   server.listen()
+// })
 
-afterEach(() => {
-  server.close()
-})
+// afterEach(() => {
+//   server.close()
+// })
 
-afterAll(() => {
-  server.resetHandlers()
-})
+// afterAll(() => {
+//   server.resetHandlers()
+// })
 
 // 🐶 pour ce test créé une fonction asynchrone pour executer le test : async () => {}
 test('faire une requette HTTP GET vers un endpoint', async () => {
@@ -138,4 +141,43 @@ test('Verifier le couple token/data passé en parameters', async () => {
   await clientAuth(fakeEndpoint, {token, data})
   expect(data).toEqual(request.body)
   expect(request.headers.get('Authorization')).toBe(`Bearer ${token}`)
+})
+
+// const mockCallback = jest.fn(authNetflix.logout())
+
+test('Verifier le message d erreur sur 401', async () => {
+  const fakeEndpoint = 'fake-endpoint'
+  const resultRequest = {message: 'Test'}
+  const token = 'faketoken'
+  const data = {fake: 'fakedata'}
+
+  server.use(
+    rest.post(`${AUTH_URL}/${fakeEndpoint}`, async (req, res, ctx) => {
+      return res(ctx.status(401), ctx.json(resultRequest))
+    }),
+  )
+
+  const error = await clientNetFlix(fakeEndpoint, {
+    token,
+    data,
+    method: 'POST',
+  }).catch(error => error) // on catch car si on le fait pas le test d'arrete sur l'erreur.
+  console.log('============')
+  console.log(error)
+  console.log('============')
+  expect(error.message).toMatchInlineSnapshot(`"Authentification incorrecte"`)
+  expect(authNetflix.logout).toHaveBeenCalledTimes(1)
+})
+
+test('Verifier le message d erreur sur 400', async () => {
+  const endpoint = 'fake-endpoint'
+  const resultError = {message: 'Fake Error'}
+
+  server.use(
+    rest.get(`${AUTH_URL}/${endpoint}`, async (req, res, ctx) => {
+      return res(ctx.status(400), ctx.json(resultError))
+    }),
+  )
+
+  await expect(clientNetFlix(endpoint)).rejects.toEqual(resultError)
 })
