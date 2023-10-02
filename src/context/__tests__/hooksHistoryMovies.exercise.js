@@ -7,17 +7,18 @@ import {renderHook, act} from '@testing-library/react-hooks'
 //   useNavigateMovie,
 //   useAddToHistory,
 // } from '../../context/HistoryMoviesContext'
+import {wrapperHistoryContext} from 'test/test-utils'
 import {
   useClearHistory,
   useNavigateMovie,
   useAddToHistory,
-} from '../../context/HistoryMoviesContext'
-import {HistoryMovieProvider} from '../../context/HistoryMoviesContext'
+} from '../HistoryMoviesContext'
+// import {HistoryMovieProvider} from '../../context/HistoryMoviesContext'
 import {TYPE_MOVIE, TYPE_TV} from 'config'
 
-const wrapperHistoryContext = ({children}) => {
-  return <HistoryMovieProvider>{children}</HistoryMovieProvider>
-} // note met en commun ce wrapper pour tous les tests
+// const wrapperHistoryContext = ({children}) => {
+//   return <HistoryMovieProvider>{children}</HistoryMovieProvider>
+// } // note met en commun ce wrapper pour tous les tests
 
 // 🐶 test du hook useNavigateMovie() et des valeurs par default
 test('useNavigateMovie() valeurs par defauts', async () => {
