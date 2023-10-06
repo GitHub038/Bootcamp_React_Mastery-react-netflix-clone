@@ -16,6 +16,7 @@ import userEvent from '@testing-library/user-event'
 import {App} from 'App'
 import {AUTH_URL, API_URL, localStorageTokenKey} from 'config'
 import {server, rest} from 'mocks'
+import * as authNetflix from '../utils/authNetflixProvider'
 
 beforeEach(() => {
   const user = {id: '1', username: 'fakeUsername', token: 'FAKE_TOKEN'}
@@ -38,6 +39,10 @@ beforeEach(() => {
   )
 })
 
+afterEach(async () => {
+  await authNetflix.logout()
+})
+
 // 🐶 fait un test en async
 test("rendu de l'app avec page de Login", async () => {
   const connexion = 'Connexion'
@@ -57,18 +62,12 @@ test("rendu de l'app avec page de Login", async () => {
 
 //bonus-1
 test("rendu de l'app en mode connecté", async () => {
-  const connexion = 'Connexion'
-  const register = 'Inscrivez vous'
   const user = {id: '1', username: 'fakeUsername', token: 'FAKE_TOKEN'}
   window.localStorage.setItem(localStorageTokenKey, user.token)
   render(<App />)
   await waitForElementToBeRemoved(() => screen.getByRole('alert'))
-  expect(
-    screen.queryByText('heading', {name: connexion}),
-  ).not.toBeInTheDocument()
-  expect(
-    screen.queryByText('heading', {name: register}),
-  ).not.toBeInTheDocument()
+  expect(screen.queryByText(/Connexion/i)).not.toBeInTheDocument()
+  expect(screen.queryByText(/Inscrivez vous/i)).not.toBeInTheDocument()
   expect(screen.getByRole('heading', {name: 'Accueil'})).toBeInTheDocument()
   expect(screen.getByRole('heading', {name: 'Series'})).toBeInTheDocument()
   expect(screen.getByRole('heading', {name: 'Films'})).toBeInTheDocument()
@@ -94,4 +93,27 @@ test("rendu de l'app en mode connecté", async () => {
 })
 
 //bonus-2
-test.todo('rendu de route la /series')
+test('rendu de route la /series', async () => {
+  const user = {id: '1', username: 'fakeUsername', token: 'FAKE_TOKEN'}
+  window.localStorage.setItem(localStorageTokenKey, user.token)
+  const route = `/series`
+  window.history.pushState({}, 'Page series Netflix', route)
+  render(<App />)
+  await waitForElementToBeRemoved(() => screen.getByRole('alert'))
+  expect(
+    screen.getByRole('heading', {name: 'Séries tendances Netflix'}),
+  ).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', {name: 'Séries les mieux notées'}),
+  ).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', {name: 'Les séries populaires'}),
+  ).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', {name: 'Les documentaires'}),
+  ).toBeInTheDocument()
+  expect(
+    screen.getByRole('heading', {name: 'Les séries criminelles'}),
+  ).toBeInTheDocument()
+  expect(screen.getByRole('contentinfo')).toBeInTheDocument()
+})
