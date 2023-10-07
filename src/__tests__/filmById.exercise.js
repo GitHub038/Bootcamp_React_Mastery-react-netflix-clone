@@ -45,7 +45,7 @@ beforeEach(() => {
       return res(ctx.json(resultsMovies))
     }),
     //bonus-4 bookmark
-    rest.post(`${API_URL}/bookmark/:type`, async (req, res, ctx) => {
+    rest.post(`${AUTH_URL}/bookmark/:type`, async (req, res, ctx) => {
       const {id} = req.body
       const {type} = req.params
       const newbookmark = {...bookmark}
